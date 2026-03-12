@@ -1,33 +1,3 @@
-"""
-Dedalus script simulating the viscous shallow water equations on a sphere. This
-script demonstrates solving an initial value problem on the sphere. It can be
-ran serially or in parallel, and uses the built-in analysis framework to save
-data snapshots to HDF5 files. The `plot_sphere.py` script can be used to produce
-plots from the saved data. The simulation should about 5 cpu-minutes to run.
-The script implements the test case of a barotropically unstable mid-latitude
-jet from Galewsky et al. 2004 (https://doi.org/10.3402/tellusa.v56i5.14436).
-The initial height field balanced the imposed jet is solved with an LBVP.
-A perturbation is then added and the solution is evolved as an IVP.
-To run and plot using e.g. 4 processes:
-    $ mpiexec -n 4 python3 shallow_water.py
-    $ mpiexec -n 4 python3 plot_sphere.py snapshots/*.h5
-    
-    
-Changes to this script for example listed on Dedalus Website:
-Sphere parameters changed to match those of Jupiter (radius, gravity, scale height, diffusion, Omega).
-Timestep scaled down to 1 second to test for stability
-Quadrature grid resolution increased to 2048x1024
-Velocity field is constructed using JWST data, interpolated to the quadrature grid resolution (1024 datapoints)
-Previous tests using data as direct input of the velocity field have resulted in 
-the simulation crashing through what is expected to be Gibbs ringing, likely
-due to the data being discrete datapoints and as a result not having an analytical
-solution.
-Instead, the np.fft.fft method is used to create an array that is then parsed 
-into f() to create a smooth function to approximate the data while still being analytical
-This function is then windowed through erfWindow().
-Perturbation of the original Dedalus script is removed to test for stability
-Order 2 diffusion is used instead of order 4 hyperdiffusion
-"""
 import numpy as np
 import dedalus.public as d3
 import logging
